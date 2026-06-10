@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>21 Neden</title>
+  <link rel="stylesheet" href="reasons.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <div class="nebula-bg">
+    <div class="star-field"></div>
+    <div class="fog fog-1"></div>
+    <div class="fog fog-2"></div>
+  </div>
+
+  <main class="container">
+    
+    <header class="page-header">
+      <div class="header-icon">✨</div>
+      <h1>İyi Ki Varsın Dedirten<br>21 Tatlı Neden</h1>
+      <p>Hayatı güzelleştiren o küçük detaylar...</p>
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </header>
+
+    <div class="cards-list" id="cardsList">
+      </div>
+
+    <button class="back-btn" onclick="window.location.href='menu.html'">
+      ⬅ Menüye Dön
+    </button>
+
+  </main>
+
+  <script>
+    // ==========================================
+    // BURAYI DÜZENLE: 21 NEDEN LİSTESİ
+    // ==========================================
+    const reasonsList = [
+      "Fikirlerine ve kararlarına her zaman saygı duyduğumuz, duruşunu sevdiğimiz bir insan olman.",
+  "Gerektiğinde en saçma dertlerimizi bile sıkılmadan sabırla dinlemen.",
+  "Tavsiyeye ya da sadece kafayı dağıtmaya ihtiyaç duyduğumuzda, doğru kelimelerle yanımızda olabilmen.",
+  "Bir konuda fikir ayrılığına düşsek bile orta yolu bulmayı ve konuyu uzatmamayı çözebilmen.",
+  "Kendine has tarzınla, hayata bakışınla ve esprilerinle arkadaşlığımıza tamamen farklı bir dinamik katman.",
+  "Dışarıdan sert görünsen de aslında çok temiz ve iyi niyetli bir kalbinin olması.",
+  "Birlikte hiç çekinmeden en üst perdeden saçmalayabildiğimiz nadir insanlardan olman.",
+  "Hayallerimize veya hedeflerimize giden yolda her zaman arkamızda durman.",
+  "Kendi aramızda veya girdiğimiz herhangi bir sosyal ortamda, her zaman başımız dik ve uyum içinde hareket edebilmemiz.",
+  "Olaylara her zaman mantıklı ve farklı bir pencereden bakarak ufkumuzu açman.",
+  "Gereksiz detaylara veya mekanlara takılmadan, nerede olursak olalım her zaman net ve yapıcı bir iletişim kurabilmemiz.",
+  "Zaman zaman hayattan, gelecekten ya da ciddi konulardan konuşurken de birbirimizi çok iyi destekleyebilmemiz.",
+  "Dürüstlüğün ve gerektiğinde yüzümüze karşı acı gerçekleri pat diye söyleyebilmen.",
+  "Aramızda uzun mesafeler veya zamanlar girse bile, kaldığımız yerden aynı samimiyetle devam edebileceğimizi bilmemiz.",
+  "Başarılı olduğumuzda veya güzel bir şey yaşadığımızda bizimle gerçekten gurur duyman.",
+  "Hayvanlara ve çevrene karşı gösterdiğin o samimi, merhametli yaklaşım.",
+  "Varlığınla hayatımıza ve arkadaşlığımıza her zaman net bir renk katman.",
+  "Hayatın getirdiği tüm yoğunluğun arasında, seninle geçirdiğimiz her vaktin bizi gerçekten dinlendirmesi.",
+  "Zor bir durumda kaldığımızda bir telefonla yardıma geleceğini bilmenin verdiği o güven.",
+  "İçtenliğin, samimiyetin ve hiçbir zaman yapmacık davranmaman.",
+  "Çünkü sen, tüm kalitenle ve karakterinle bizim için harika bir dostsun. İyi ki doğdun, iyi ki varsın!"
+    ];
+
+    const container = document.getElementById('cardsList');
+    const progressBar = document.getElementById('progressBar');
+    let openCount = 0;
+
+    // Kartları Oluştur
+    reasonsList.forEach((reason, index) => {
+      const num = index + 1;
+      const card = document.createElement('div');
+      card.className = 'reason-card';
+      // Animasyon sırası
+      card.style.animationDelay = `${index * 0.1}s`;
+      
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="number-badge">${num}</div>
+          <span class="tap-text">Nedeni gör</span>
+          <div class="chevron">▼</div>
+        </div>
+        <div class="card-content">
+          <p>${reason}</p>
+        </div>
+      `;
+
+      // Tıklama Olayı
+      card.onclick = function() {
+        // Zaten açıksa kapat
+        if (this.classList.contains('active')) {
+          this.classList.remove('active');
+          openCount--;
+        } else {
+          // Kapalıysa aç
+          // Diğerlerini kapatmak istersen bu kodu aç:
+          // document.querySelectorAll('.reason-card').forEach(c => c.classList.remove('active'));
+          
+          this.classList.add('active');
+          openCount++;
+          
+          // 21. Maddeye tıklandıysa veya hepsi açıldıysa konfeti at
+          if (num === 21 || openCount === reasonsList.length) {
+            triggerConfetti();
+          }
+        }
+        updateProgress();
+      };
+
+      container.appendChild(card);
+    });
+
+    function updateProgress() {
+      const percentage = (openCount / reasonsList.length) * 100;
+      progressBar.style.width = `${percentage}%`;
+    }
+
+    function triggerConfetti() {
+      // Soldan ve Sağdan fırlat
+      var count = 200;
+      var defaults = {
+        origin: { y: 0.7 }
+      };
+
+      function fire(particleRatio, opts) {
+        confetti(Object.assign({}, defaults, opts, {
+          particleCount: Math.floor(count * particleRatio)
+        }));
+      }
+
+      fire(0.25, { spread: 26, startVelocity: 55, });
+      fire(0.2, { spread: 60, });
+      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+      fire(0.1, { spread: 120, startVelocity: 45, });
+    }
+  </script>
+</body>
+</html>

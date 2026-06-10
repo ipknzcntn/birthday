@@ -1,0 +1,304 @@
+:root {
+    --text-color: #ffffff;
+    --modal-bg: #fffdf9;
+    --accent-color: #e74c3c;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* 4 Farklı lacivert ve gece mavisi tonunda hareket eden gradyan */
+    background: linear-gradient(-45deg, #0f172a, #1e1b4b, #1e293b, #0f172a);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Arka planın yavaşça dönmesi ve dalgalanması için animasyon */
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    margin-top: 20px;
+}
+
+header h1 {
+    color: #ffffff;
+    font-size: 2.3rem;
+    margin-bottom: 12px;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+header p {
+    color: #94a3b8;
+    font-style: italic;
+    font-size: 1.05rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 12 Ay Grid Alanı */
+.months-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 22px;
+    max-width: 900px;
+    width: 100%;
+    padding: 10px;
+}
+
+/* Her Aya Özel Canlı Renkler (friends.html tarzı) */
+.month-card {
+    border-radius: 16px;
+    padding: 35px 20px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, filter 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Koyu arka planda çok sırıtmaması için renkleri hafifçe tatlı neon/pastel tonlara çektim */
+.month-card:nth-child(1)  { background: linear-gradient(135deg, #ff7675, #d63031); } /* Temmuz */
+.month-card:nth-child(2)  { background: linear-gradient(135deg, #fdcb6e, #e17055); } /* Ağustos */
+.month-card:nth-child(3)  { background: linear-gradient(135deg, #00cec9, #00b894); } /* Eylül */
+.month-card:nth-child(4)  { background: linear-gradient(135deg, #a29bfe, #6c5ce7); } /* Ekim */
+.month-card:nth-child(5)  { background: linear-gradient(135deg, #fd79a8, #e84393); } /* Kasım */
+.month-card:nth-child(6)  { background: linear-gradient(135deg, #74b9ff, #0984e3); } /* Aralık */
+.month-card:nth-child(7)  { background: linear-gradient(135deg, #55efc4, #00b894); } /* Ocak */
+.month-card:nth-child(8)  { background: linear-gradient(135deg, #fab1a0, #ff7675); } /* Şubat */
+.month-card:nth-child(9)  { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); } /* Mart */
+.month-card:nth-child(10) { background: linear-gradient(135deg, #81ecec, #00cec9); } /* Nisan */
+.month-card:nth-child(11) { background: linear-gradient(135deg, #ff7675, #e84393); } /* Mayıs */
+.month-card:nth-child(12) { background: linear-gradient(135deg, #ffeaa7, #e17055); } /* Haziran */
+
+.month-card:hover {
+    transform: translateY(-10px) scale(1.04);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+
+.month-card i {
+    font-size: 2.6rem;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 12px;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.month-card h3 {
+    margin: 5px 0 0 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Kilitli Kart Tasarımı (Siyah beyaz yapıp arkaya doğru gömüyoruz) */
+.month-card.locked {
+    filter: grayscale(80%) brightness(70%);
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.month-card.locked:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Başarı Onay Tiki */
+.status-dot {
+    font-size: 0.85rem;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 4px 12px;
+    border-radius: 12px;
+    margin-top: 14px;
+    display: none;
+    font-weight: bold;
+    width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Genel Modal Katmanı */
+.modal {
+    display: none; 
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(15, 23, 42, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(7px);
+}
+
+/* Mektup Kağıdı Tasarımı */
+.letter-paper {
+    background-color: var(--modal-bg);
+    background-image: linear-gradient(#e6e2d8 1px, transparent 1px);
+    background-size: 100% 2em;
+    line-height: 2em;
+    padding: 40px 30px;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 14px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    position: relative;
+    border-left: 5px solid var(--accent-color);
+}
+
+.letter-content {
+    font-family: 'Georgia', serif;
+    font-size: 1.15rem;
+    color: #1e293b;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+/* Müzik Player Kutusu */
+.music-box {
+    background: #f1f5f9;
+    padding: 14px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    line-height: 1.3em;
+    border: 1px solid #e2e8f0;
+}
+
+.music-box span {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #0f172a;
+}
+
+.music-btn {
+    background-color: #0f172a;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: background 0.2s, transform 0.1s;
+    font-weight: 500;
+}
+
+.music-btn:hover {
+    background-color: #1e293b;
+    transform: scale(1.05);
+}
+
+/* Butonlar */
+.close-letter-btn {
+    background: linear-gradient(135deg, #ff7675, #e84393);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 16px;
+    border-radius: 30px;
+    font-size: 1.05rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(232, 67, 147, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.close-letter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(232, 67, 147, 0.5);
+}
+
+/* Kilitli Uyarı Kutusu */
+.lock-box {
+    background: #ffffff;
+    padding: 40px 30px;
+    text-align: center;
+    border-radius: 24px;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+
+.lock-icon {
+    font-size: 4rem;
+    color: #e74c3c;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+.lock-box h2 {
+    color: #0f172a;
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+}
+
+.lock-box p {
+    color: #475569;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+/* Canlı Sayaç Alanı */
+.countdown {
+    background: #f1f5f9;
+    padding: 18px;
+    border-radius: 12px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #e74c3c;
+    margin: 25px 0;
+    border: 2px dashed #cbd5e1;
+    letter-spacing: 0.5px;
+}
+
+.close-lock-btn {
+    background-color: #0f172a;
+    color: white;
+    border: none;
+    padding: 14px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.close-lock-btn:hover {
+    background-color: #1e293b;
+}
+
+.back-nav {
+    margin-top: 40px;
+    text-decoration: none;
+    color: #94a3b8;
+    font-weight: 600;
+    transition: color 0.2s;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.back-nav:hover {
+    color: #ffffff;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12 Ayın Mutluluk Rehberi 💌</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="rituel.css">
+</head>
+<body>
+
+    <header>
+        <h1>Kendine Ayıracağın 12 Küçük An 💌</h1>
+        <p>İlk mektup 22 Temmuz'da açılır ve her ayın 22'sinde yeni bir anı serbest kalır.</p>
+    </header>
+
+    <div class="months-grid" id="monthsGrid"></div>
+
+    <a href="menu.html" class="back-nav"><i class="fas fa-arrow-left"></i> Menüye Dön</a>
+
+    <div class="modal" id="letterModal">
+        <div class="letter-paper">
+            <div class="letter-content" id="letterText"></div>
+            
+            <div class="music-box">
+                <div>
+                    <small style="color:#888; display:block;">Bu anın eşlikçisi:</small>
+                    <span id="musicName">Şarkı Yükleniyor...</span>
+                </div>
+                <a href="#" target="_blank" class="music-btn" id="musicLink">
+                    <i class="fas fa-play"></i> Dinle
+                </a>
+            </div>
+
+            <button class="close-letter-btn" onclick="closeLetter()">Fark Ettim ve Uyguladım ✨</button>
+        </div>
+    </div>
+
+    <div class="modal" id="lockModal">
+        <div class="lock-box">
+            <i class="fas fa-hourglass-half lock-icon"></i>
+            <h2>Bu Mektubun Mühürleri Henüz Sökülmedi!</h2>
+            <p>Bu ayki farkındalık anına ulaşmak için biraz daha sabretmelisin.</p>
+            <div class="countdown" id="countdownTimer">00 Gün 00 Saat 00 Dakika</div>
+            <button class="close-lock-btn" onclick="closeLockModal()">Pekala, Bekliyorum 🤍</button>
+        </div>
+    </div>
+
+    <script>
+        // Ayların Hedef Tarihleri (Yıl, Ay [0-11], Gün)
+        // JavaScript'te aylar 0'dan başlar: Ocak=0, Şubat=1, ... Temmuz=6, Ağustos=7 ... Haziran=5
+        const data = [
+            { id: 1, name: "1. Ay: Temmuz", text: "Bu ay hayatın koşturmacasına sadece 5 dakikalığına ara vermeni istiyoruz. Şu an bu satırları okurken tam 1 yıl sonraki haline iletmek istediğin 3 kelimelik bir dilek tut. Bir kağıda yaz ve odanda gizli bir yere sakla. Gelecek yıl bugün açacaksın.", music: "Alphaville - Forever Young", link: "https://www.youtube.com/watch?v=t1TcDHrkQYg", targetDate: new Date(2026, 6, 22, 0, 0, 0) },
+            { id: 2, name: "2. Ay: Ağustos", text: "Hemen şimdi, nerede olursan ol arkana yaslan. Gözlerini kapat ve sadece aldığın nefese odaklanarak 10 kere çok yavaş nefes alıp ver. Dünyanın gürültüsünü 2 dakikalığına sessize al.", music: "Şebnem Ferah & Hayko Cepkin & Badem & TNK & Aylin Aslım - Özgürce Yaşa", link: "https://www.youtube.com/watch?v=G2nXKQ-Zz2s&list=RDG2nXKQ-Zz2s&start_radio=1", targetDate: new Date(2026, 7, 22, 0, 0, 0) },
+            { id: 3, name: "3. Ay: Eylül", text: "Şu an etrafına bak ve daha önce hiç dikkatini çekmemiş, orada öylece duran 3 nesneyi fark et. Bazen en yakınımızdaki güzellikleri görmeyi unuturuz. Bugün etrafını keşfetme günü.", music: "Louis Armstrong - What a Wonderful World", link: "https://www.youtube.com/watch?v=rBrd_3VMC3c", targetDate: new Date(2026, 8, 22, 0, 0, 0) },
+            { id: 4, name: "4. Ay: Ekim", text: "Bugün hayatında 'iyi ki var' dediğin, seni mutlu eden 3 şeyi zihninden geçir. Bu harika bir dost, sıcak bir kahve ya da şu an arkada çalan o şarkı olabilir. Sahip olduklarını hatırla.", music: "Athena - Ben Böyleyim", link: "https://www.youtube.com/watch?v=xXJmbuppQxw&list=RDxXJmbuppQxw&start_radio=1", targetDate: new Date(2026, 9, 22, 0, 0, 0) },
+            { id: 5, name: "5. Ay: Kasım", text: "Şu an derin bir nefes al ve sonraki 3 dakika boyunca arkada çalan ritmin modunu yukarı taşımasına, içini enerjiyle doldurmasına izin ver. Modunu değiştirme vakti!", music: "Pharrell Williams - Happy", link: "https://www.youtube.com/watch?v=ZbZSe6N_BXs", targetDate: new Date(2026, 10, 22, 0, 0, 0) },
+            { id: 6, name: "6. Ay: Aralık", text: "Telefonunu eline al. Galerinde, sosyal medyanda veya dijital alanında artık sana hiçbir şey hissettirmeyen ya da enerjini düşüren 5 şeyi (eski bir ekran görüntüsü, kullanmadığın bir uygulama vb.) sil. Hafifle.", music: "Hayko Cepkin - Sıkı Tutun", link: "https://www.youtube.com/watch?v=Xd2zmrCwvH4&list=RDXd2zmrCwvH4&start_radio=1", targetDate: new Date(2026, 11, 22, 0, 0, 0) },
+            { id: 7, name: "7. Ay: Ocak", text: "Günlerdir ertelediğin, 'sonra yaparım' dediğin ve zihnini ufaktan kurcalayan o küçücük işi (birine cevap yazmak, masanın üstünü düzeltmek vb.) hemen şimdi, şu 5 dakika içinde yap ve bitir. O yükten kurtul.", music: "Survivor - Eye of the Tiger", link: "https://www.youtube.com/watch?v=btPJPFnesV4", targetDate: new Date(2027, 0, 22, 0, 0, 0) },
+            { id: 8, name: "8. Ay: Şubat", text: "Bugün günün geri kalanında (veya önündeki 1 saat boyunca) sosyal medyaya hiç bakmamayı dene. Bildirimleri boşver ve sadece o an önünde ne varsa onun tadını çıkar.", music: "Pinhani - Hele Bi Gel", link: "https://www.youtube.com/watch?v=1lQ80N7e2Dc&list=RD1lQ80N7e2Dc&start_radio=1", targetDate: new Date(2027, 1, 22, 0, 0, 0) },
+            { id: 9, name: "9. Ay: Mart", text: "Aynanın karşısına geç, kendine bak ve içinden 'Bugün elimden gelenin en iyisini yapıyorum ve bu yeterli' de. Kendine şefkat göstermek ve değerini hatırlamak için harika bir gün.", music: "Coldplay - Fix You", link: "https://www.youtube.com/watch?v=k4V3Mo61fJM", targetDate: new Date(2027, 2, 22, 0, 0, 0) },
+            { id: 10, name: "10. Ay: Nisan", text: "Telefonunun galerisinde tam 1 veya 2 yıl önce bugün çektiğin fotoğraflara git. Neredeydin, ne yapıyordun hatırla. Zamanın nasıl akıp geçtiğini ve ne kadar büyüdüğünü görerek gülümse.", music: "Müslüm Gürses - Tutamıyorum Zamanı", link: "https://www.youtube.com/watch?v=FLR7Fs4Sw0M&list=RDFLR7Fs4Sw0M&start_radio=1", targetDate: new Date(2027, 3, 22, 0, 0, 0) },
+            { id: 11, name: "11. Ay: Mayıs", text: "Bugün dışarıda veya okulda/işte karşılaşacağın birine (bu bir kurye, market çalışanı ya da bir yabancı olabilir) içten bir şekilde gülümse ve 'Kolay gensin' de. Küçük bir nezaketin enerjisini fark et.", music: "The Beatles - Here Comes The Sun", link: "https://www.youtube.com/watch?v=KQetemT1sWc", targetDate: new Date(2027, 4, 22, 0, 0, 0) },
+            { id: 12, name: "12. Ay: Haziran", text: "Yeni yaşına çok az kaldı, koca bir yılı devirdin. Bu yıl seni en çok güldüren, içini en çok ısıtan o tek bir anı düşün. O anı zihninde tekrar yaşa ve bu yılı tatlı bir tebessümle uğırla.", music: "Teoman - Güzel Bir Gün", link: "https://www.youtube.com/watch?v=A6L-cTnZei8&list=RDA6L-cTnZei8&start_radio=1", targetDate: new Date(2027, 5, 22, 0, 0, 0) }
+        ];
+
+        const grid = document.getElementById('monthsGrid');
+        let activeCardId = null;
+        let countdownInterval = null;
+
+        // Kartları oluşturma ve kilit kontrolü
+        function initCards() {
+            grid.innerHTML = "";
+            const now = new Date();
+
+            data.forEach(item => {
+                const isLocked = now < item.targetDate;
+                const card = document.createElement('div');
+                card.className = `month-card ${isLocked ? 'locked' : ''}`;
+                card.id = `card-${item.id}`;
+
+                card.innerHTML = `
+                    <i class="fas ${isLocked ? 'fa-lock' : 'fa-envelope'}" id="icon-${item.id}"></i>
+                    <h3>${item.name}</h3>
+                    <div class="status-dot" id="status-${item.id}"><i class="fas fa-check-circle"></i> Yapıldı</div>
+                `;
+
+                card.onclick = () => handleCardClick(item, isLocked);
+                grid.appendChild(card);
+            });
+        }
+
+        function handleCardClick(item, isLocked) {
+            if (isLocked) {
+                openLockModal(item.targetDate);
+            } else {
+                openLetter(item);
+            }
+        }
+
+        // Başarılı mektup açılışı
+        function openLetter(item) {
+            activeCardId = item.id;
+            document.getElementById('letterText').innerText = item.text;
+            document.getElementById('musicName').innerText = item.music;
+            document.getElementById('musicLink').href = item.link;
+            document.getElementById('letterModal').style.display = 'flex';
+        }
+
+        function closeLetter() {
+            document.getElementById('letterModal').style.display = 'none';
+            if(activeCardId) {
+                document.getElementById(`icon-${activeCardId}`).className = 'fas fa-envelope-open-text';
+                document.getElementById(`status-${activeCardId}`).style.display = 'block';
+                document.getElementById(`card-${activeCardId}`).style.borderColor = '#2ecc71';
+            }
+        }
+
+        // Kilitli ekranı açma ve sayacı başlatma
+        function openLockModal(targetDate) {
+            document.getElementById('lockModal').style.display = 'flex';
+            
+            // Canlı sayacı başlatma
+            if(countdownInterval) clearInterval(countdownInterval);
+            
+            function updateTimer() {
+                const now = new Date();
+                const difference = targetDate - now;
+
+                if (difference <= 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('lockModal').style.display = 'none';
+                    initCards(); // Sayfayı yenilemeden kilidi açar
+                    return;
+                }
+
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('countdownTimer').innerText = 
+                    `${days} Gün ${hours} Saat ${minutes} Dakika ${seconds} Saniye`;
+            }
+
+            updateTimer();
+            countdownInterval = setInterval(updateTimer, 1000);
+        }
+
+        function closeLockModal() {
+            document.getElementById('lockModal').style.display = 'none';
+            if(countdownInterval) clearInterval(countdownInterval);
+        }
+
+        // Sayfa yüklendiğinde kartları hazırla
+        initCards();
+    </script>
+</body>
+</html>
